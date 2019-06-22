@@ -8,6 +8,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 找到目录，优先加载目录中的index.js
 import router from './router'
 
+import './styles/index.less'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
