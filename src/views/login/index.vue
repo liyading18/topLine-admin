@@ -5,11 +5,15 @@
         <img src="./logo_index.png" alt="黑马头条">
       </div>
       <div class="login-form">
-        <el-form ref="form" :model="form">
-          <el-form-item>
+        <!-- 表单验证：
+        rules  配置验证规则
+        将需要验证的字段通过prop属性配置到el-form-item组件上
+        ref 获取表单组件，可以手动调用表单组件的验证方法-->
+        <el-form ref="ruleForm" :model="form" :rules="rules">
+          <el-form-item prop="mobile">
             <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="code">
             <!-- 支持栅格布局 -->
             <el-col :span="10">
               <el-input v-model="form.code" placeholder="验证码"></el-input>
@@ -41,6 +45,16 @@ export default {
         mobile: '15931441062',
         code: ''
       },
+      rules: {
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { len: 11, message: '长度必须为11 个字符', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { len: 6, message: '长度在必须为6个字符', trigger: 'blur' }
+        ]
+      },
       // 通过initGeetest得到的极验验证码对象
       captchaObj: null
     }
@@ -49,6 +63,18 @@ export default {
   methods: {
     handleLogin() {
       // console.log('submit!')
+      // 表单组件有一个方法valiadata可以获取当前表单的验证状态
+      this.$refs['ruleForm'].validate(valid => {
+        if (!valid) {
+          return
+        }
+
+        // 表单验证通过，提交登录
+        this.submitLogin()
+      })
+    },
+
+    submitLogin() {
       axios({
         method: 'POST',
         url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
