@@ -81,6 +81,24 @@ export default {
             captchaObj.verify()
           }).onSuccess(function() {
             console.log('gt验证成功！')
+            // console.log(captchaObj.getValidate())
+            const {
+              geetest_challenge: challenge,
+              geetest_validate: validate,
+              geetest_seccode: seccode } =
+              captchaObj.getValidate()
+            // 调用获取验证码（极验API2)接口,发送短信
+            axios({
+              method: 'GET',
+              url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${mobile}`,
+              params: {
+                challenge,
+                validate,
+                seccode
+              }
+            }).then(res => {
+              console.log(res.data)
+            })
           })
         })
       })
