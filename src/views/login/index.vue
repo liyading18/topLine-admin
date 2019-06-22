@@ -53,6 +53,11 @@ export default {
 
     handleSendCode() {
       const { mobile } = this.form
+
+      if (this.captchaObj) {
+        return this.captchaObj.verify()
+      }
+
       axios({
         method: 'GET',
         url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
@@ -67,7 +72,8 @@ export default {
           new_captcha: data.new_captcha,
           // 隐藏按钮式
           product: 'bind'
-        }, function(captchaObj) {
+        }, (captchaObj) => {
+          this.captchaObj = captchaObj
           // 这里可以调用验证实例 captchaObj 的实例方法
           // console.log(captchaObj)
           captchaObj.onReady(function() {
