@@ -40,7 +40,9 @@ export default {
       form: {
         mobile: '15931441062',
         code: ''
-      }
+      },
+      // 通过initGeetest得到的极验验证码对象
+      captchaObj: null
     }
   },
 
@@ -55,7 +57,26 @@ export default {
         method: 'GET',
         url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
+        const data = res.data.data
+        window.initGeetest({
+          // 以下配置参数来自服务端 SDK
+          gt: data.gt,
+          challenge: data.challenge,
+          offline: !data.success,
+          new_captcha: data.new_captcha,
+          // 隐藏按钮式
+          product: 'bind'
+        }, function(captchaObj) {
+          // 这里可以调用验证实例 captchaObj 的实例方法
+          // console.log(captchaObj)
+          captchaObj.onReady(function() {
+            // 隐藏按钮式
+            captchaObj.verify()
+          }).onSuccess(function() {
+            console.log('gt验证成功！')
+          })
+        })
       })
     }
   }
