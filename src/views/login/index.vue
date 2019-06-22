@@ -30,6 +30,8 @@
 
 <script>
 import axios from 'axios'
+// 引入极验gt  gt.js会向去全局window暴露一个initGeetest
+import '@/vendor/gt'
 
 export default {
   name: 'AppLogin',
