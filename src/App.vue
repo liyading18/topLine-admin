@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <p>App component</p>
+  <div id="app">
     <!-- <p><i class="iconfont iconfensix"></i></p> -->
     <router-view/>
   </div>

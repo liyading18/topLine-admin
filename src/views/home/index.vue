@@ -1,10 +1,12 @@
 <template>
-  <div></div>
+  <div>
+    <p>Home Vue</p>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'AppHome',
   data () {
     return {}
   }

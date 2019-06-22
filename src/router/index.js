@@ -8,6 +8,7 @@ export default new Router({
     {
       name: 'home',
       path: '/',
+      // @表示src目录，无论你当前文件在哪里，@都是src
       component: () => import('@/views/home')
     },
     {
