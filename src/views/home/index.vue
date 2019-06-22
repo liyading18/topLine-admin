@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <p>App component</p>
-    <router-view/>
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -13,6 +10,5 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
+<style lang='scss' scoped>
 </style>
