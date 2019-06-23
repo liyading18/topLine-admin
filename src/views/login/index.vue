@@ -116,6 +116,8 @@ export default {
       }).then(res => {
         // 大于等于200小于400的状态码都会进入这里
         // console.log(res.data)
+        // 登陆成功，将用户信息存储到本地存储
+        window.localStorage.setItem('user_info', JSON.stringify(res.data.data))
         // Element提供的message消息提示组件
         this.$message({
           message: '恭喜你，登陆成功！',

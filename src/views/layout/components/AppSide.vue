@@ -14,6 +14,7 @@
     background-color="#545c64"
     text-color="#fff"
     active-text-color="#ffd04b"
+    router
   >
     <div class="logo">
       <img src="./logo_admin.png" alt>
@@ -27,7 +28,7 @@
         <i class="el-icon-s-management"></i>
         <span>内容管理</span>
       </template>
-      <el-menu-item index="1-2">
+      <el-menu-item index="/publish">
         <i class="el-icon-s-promotion"></i>
         <span slot="title">发布文章</span>
       </el-menu-item>
