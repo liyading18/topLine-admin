@@ -22,6 +22,10 @@
               <el-button @click="handleSendCode">获取验证码</el-button>
             </el-col>
           </el-form-item>
+          <el-form-item prop="agree">
+            <el-checkbox class="ckbox" v-model="form.agree">备选项</el-checkbox>
+            <span>我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私条款</a></span>
+          </el-form-item>
           <el-form-item>
             <!-- 给组件加class,他会作用到根元素上 -->
             <el-button
@@ -47,8 +51,9 @@ export default {
   data() {
     return {
       form: { // 表单数据
-        mobile: '15931441062',
-        code: ''
+        mobile: '17815340384',
+        code: '',
+        agree: '' // 是否同意用户协议
       },
       loginLoading: false, // 登录按钮的loading状态
       rules: { // 表单验证规则
@@ -59,6 +64,10 @@ export default {
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { len: 6, message: '长度在必须为6个字符', trigger: 'blur' }
+        ],
+        agree: [
+          { required: true, message: '请同意用户协议', trigger: 'change' },
+          { pattern: /true/, message: '请同意用户协议', trigger: 'change' }
         ]
       },
       // 通过initGeetest得到的极验验证码对象
@@ -182,8 +191,15 @@ export default {
     border-radius: 10px;
     background-color: #ffffff;
     padding: 50px;
-    .btn-login {
-      width: 100%;
+    .login-form {
+      box-sizing: border-box;
+      .ckbox {
+        margin-right: 12px;
+      }
+      .btn-login {
+       margin-top: 20px;
+       width: 100%;
+      }
     }
   }
 }
