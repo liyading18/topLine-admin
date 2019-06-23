@@ -19,7 +19,12 @@
               <el-input v-model="form.code" placeholder="验证码"></el-input>
             </el-col>
             <el-col :span="10" :offset="2">
-              <el-button @click="handleSendCode">获取验证码</el-button>
+              <el-button
+                @click="handleSendCode"
+                :disabled="!!codeTimer"
+              >
+                {{ codeTimer ? `剩余${codeSeconds}秒` : '获取验证码' }}
+              </el-button>
             </el-col>
           </el-form-item>
           <el-form-item prop="agree">
@@ -50,6 +55,9 @@ import axios from 'axios'
 // 引入极验gt  gt.js会向去全局window暴露一个initGeetest
 import '@/vendor/gt'
 
+// 定义全局倒计时用的时间
+const initCodeSeconds = 10
+
 export default {
   name: 'AppLogin',
   data() {
@@ -75,7 +83,11 @@ export default {
         ]
       },
       // 通过initGeetest得到的极验验证码对象
-      captchaObj: null
+      captchaObj: null,
+      // 倒计时间
+      codeSeconds: initCodeSeconds,
+      // 倒计时定时器
+      codeTimer: null
     }
   },
 
@@ -160,10 +172,11 @@ export default {
           this.captchaObj = captchaObj
           // 这里可以调用验证实例 captchaObj 的实例方法
           // console.log(captchaObj)
-          captchaObj.onReady(function() {
+          captchaObj.onReady(() => {
             // 隐藏按钮式
+            // 只有Ready了才能显示验证码
             captchaObj.verify()
-          }).onSuccess(function() {
+          }).onSuccess(() => {
             console.log('gt验证成功！')
             // console.log(captchaObj.getValidate())
             const {
@@ -182,10 +195,27 @@ export default {
               }
             }).then(res => {
               console.log(res.data)
+              // 发送短信之后，开始倒计时
+              this.codeCountDown()
             })
           })
         })
       })
+    },
+
+    // 倒计时
+    codeCountDown() {
+      this.codeTimer = window.setInterval(() => {
+        this.codeSeconds--
+        if (this.codeSeconds <= 0) {
+          // 让倒计时恢复初始状态
+          this.codeSeconds = initCodeSeconds
+          // 清除倒计时
+          window.clearInterval(this.codeTimer)
+          // 清除定时器状态
+          this.codeTimer = null
+        }
+      }, 1000)
     }
   }
 }
