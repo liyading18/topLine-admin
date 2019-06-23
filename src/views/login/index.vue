@@ -22,9 +22,7 @@
               <el-button
                 @click="handleSendCode"
                 :disabled="!!codeTimer"
-              >
-                {{ codeTimer ? `剩余${codeSeconds}秒` : '获取验证码' }}
-              </el-button>
+              >{{ codeTimer ? `剩余${codeSeconds}秒` : '获取验证码' }}</el-button>
             </el-col>
           </el-form-item>
           <el-form-item prop="agree">
@@ -87,7 +85,9 @@ export default {
       // 倒计时间
       codeSeconds: initCodeSeconds,
       // 倒计时定时器
-      codeTimer: null
+      codeTimer: null,
+      // 保存极验初始化验证码发短信的手机
+      sendMobile: ''
     }
   },
 
@@ -142,21 +142,38 @@ export default {
         if (errorMessage.trim().length > 0) {
           return
         }
-        // 手机号码有效，初始化验证码插件
-        this.showGeetest()
+
+        // 手机号码通过验证
+
+        // 验证是否有验证码插件
+        if (this.captchaObj) {
+          // 如果用户输入的手机号和之前获得极验验证码的手机号不一致，
+          // 初始化极验验证码
+          if (this.form.mobile !== this.sendMobile) {
+            // 重新初始化之前，将原来的验证码插件DOM删除
+            document.body.removeChild(document.querySelector('.geetest_panel'))
+            this.showGeetest()
+          } else {
+            // 手机号码一致，直接弹出极验验证码
+            this.captchaObj.verify()
+          }
+        } else {
+          // 这里是第一次初始化验证码插件
+          this.showGeetest()
+        }
       })
     },
 
     showGeetest() {
-      const { mobile } = this.form
+      // const { mobile } = this.form
 
-      if (this.captchaObj) {
-        return this.captchaObj.verify()
-      }
+      // if (this.captchaObj) {
+      //   return this.captchaObj.verify()
+      // }
 
       axios({
         method: 'GET',
-        url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
+        url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${this.form.mobile}`
       }).then(res => {
         // console.log(res.data)
         const data = res.data.data
@@ -175,6 +192,7 @@ export default {
           captchaObj.onReady(() => {
             // 隐藏按钮式
             // 只有Ready了才能显示验证码
+            this.sendMobile = this.form.mobile
             captchaObj.verify()
           }).onSuccess(() => {
             console.log('gt验证成功！')
@@ -187,7 +205,7 @@ export default {
             // 调用获取验证码（极验API2)接口,发送短信
             axios({
               method: 'GET',
-              url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${mobile}`,
+              url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${this.form.mobile}`,
               params: {
                 challenge,
                 validate,
