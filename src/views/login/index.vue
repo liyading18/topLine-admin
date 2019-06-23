@@ -24,7 +24,11 @@
           </el-form-item>
           <el-form-item prop="agree">
             <el-checkbox class="ckbox" v-model="form.agree">备选项</el-checkbox>
-            <span>我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私条款</a></span>
+            <span>
+              我已阅读并同意
+              <a href="#">用户协议</a>和
+              <a href="#">隐私条款</a>
+            </span>
           </el-form-item>
           <el-form-item>
             <!-- 给组件加class,他会作用到根元素上 -->
@@ -120,6 +124,18 @@ export default {
     },
 
     handleSendCode() {
+      // const { mobile } = this.form
+      // 校验手机号是否有效
+      this.$refs['ruleForm'].validateField('mobile', errorMessage => {
+        if (errorMessage.trim().length > 0) {
+          return
+        }
+        // 手机号码有效，初始化验证码插件
+        this.showGeetest()
+      })
+    },
+
+    showGeetest() {
       const { mobile } = this.form
 
       if (this.captchaObj) {
@@ -197,8 +213,8 @@ export default {
         margin-right: 12px;
       }
       .btn-login {
-       margin-top: 20px;
-       width: 100%;
+        margin-top: 20px;
+        width: 100%;
       }
     }
   }
