@@ -18,7 +18,7 @@
     <div class="logo">
       <img src="./logo_admin.png" alt>
     </div>
-    <el-menu-item index="2">
+    <el-menu-item index="/">
       <i class="el-icon-s-home"></i>
       <span slot="title">首页</span>
     </el-menu-item>
@@ -94,14 +94,16 @@ export default {
 
 <style lang='less' scoped>
 .el-menu {
+  box-sizing: border-box;
   height: 100%;
+  overflow: auto;
   .logo {
     display: flex;
     justify-content: center;
     background: #2d2e31;
     padding: 10px;
     img {
-      width: 120px;
+      width: 100%;
     }
   }
 }

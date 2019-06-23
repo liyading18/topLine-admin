@@ -7,7 +7,10 @@
       <el-header>
         <AppHeader/>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 给layout中组件一个路由出口地址 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
