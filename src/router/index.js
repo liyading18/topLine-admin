@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// 引进nprogress第三方包
+import nprogress from 'nprogress'
 
 Vue.use(Router)
 
@@ -17,7 +19,7 @@ const router = new Router({
       component: () => import('@/views/login')
     },
     {
-      name: 'layout',
+      // name: 'layout',
       // name: 'layout', 由于它右默认子路由，所以它的名字没有意义，否则VUE发黄色警告
       path: '/',
       component: () => import('@/views/layout'),
@@ -45,6 +47,9 @@ const router = new Router({
 // next 允许通过的方法
 
 router.beforeEach((to, from, next) => {
+  // 进度条nprogress使用start方法
+  nprogress.start()
+
   const userInfo = window.localStorage.getItem('user_info')
 
   // 如果是非 /login页面，判断其登陆状态
@@ -65,6 +70,11 @@ router.beforeEach((to, from, next) => {
       next()
     }
   }
+})
+
+// 路由导航完成的时候会进入这里
+router.afterEach((to, from) => {
+  nprogress.done()
 })
 
 export default router

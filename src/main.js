@@ -10,6 +10,9 @@ import router from './router'
 
 import './styles/index.less'
 
+// 引进nprogress样式
+import 'nprogress/nprogress.css'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false

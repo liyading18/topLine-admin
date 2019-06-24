@@ -26,9 +26,8 @@
             </el-col>
           </el-form-item>
           <el-form-item prop="agree">
-            <el-checkbox class="ckbox" v-model="form.agree">备选项</el-checkbox>
+            <el-checkbox class="ckbox" v-model="form.agree">我已阅读并同意</el-checkbox>
             <span>
-              我已阅读并同意
               <a href="#">用户协议</a>和
               <a href="#">隐私条款</a>
             </span>
@@ -54,7 +53,7 @@ import axios from 'axios'
 import '@/vendor/gt'
 
 // 定义全局倒计时用的时间
-const initCodeSeconds = 10
+const initCodeSeconds = 0
 
 export default {
   name: 'AppLogin',
