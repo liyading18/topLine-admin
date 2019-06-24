@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 // 引入极验gt  gt.js会向去全局window暴露一个initGeetest
 import '@/vendor/gt'
 
@@ -108,9 +108,9 @@ export default {
 
     submitLogin() {
       this.loginLoading = true
-      axios({
+      this.$http({
         method: 'POST',
-        url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+        url: '/authorizations',
         data: this.form
       }).then(res => {
         // 大于等于200小于400的状态码都会进入这里
@@ -173,9 +173,9 @@ export default {
       // 初始化验证码期间，禁用获取验证码的按钮
       this.codeLoading = true
 
-      axios({
+      this.$http({
         method: 'GET',
-        url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${this.form.mobile}`
+        url: `/captchas/${this.form.mobile}`
       }).then(res => {
         // console.log(res.data)
         const data = res.data.data
@@ -207,9 +207,9 @@ export default {
               geetest_seccode: seccode } =
               captchaObj.getValidate()
             // 调用获取验证码（极验API2)接口,发送短信
-            axios({
+            this.$http({
               method: 'GET',
-              url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${this.form.mobile}`,
+              url: `/sms/codes/${this.form.mobile}`,
               params: {
                 challenge,
                 validate,
