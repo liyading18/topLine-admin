@@ -53,9 +53,9 @@
         <!-- 表格列默认只能输出文本，如果需要自定义里面的内容，则需要自定义 -->
         <el-table-column prop="cover.images[0]" label="封面" width="60">
           <!-- slot-scope是插槽作用域，scope是自己起的名字，scope中有个成员叫row
-          scope.row就是当前的遍历项 -->
+          scope.row就是当前的遍历项-->
           <template slot-scope="scope">
-            <img :src="scope.row.cover.images[0]" alt="">
+            <img :src="scope.row.cover.images[0]" alt>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" width="180"></el-table-column>
@@ -65,7 +65,14 @@
       <!-- table表格 -->
 
       <!-- 数据分页 -->
-      <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+      <!-- 默认每页10条数据 -->
+      <!-- current-change分页组件事件 -->
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="totalCount"
+        @current-change="handleCurrentPage"
+      ></el-pagination>
       <!-- 数据分页 -->
     </el-card>
     <!-- 列表 -->
@@ -91,6 +98,7 @@ export default {
         desc: '',
         value1: ''
       },
+      totalCount: 0,
       tableData: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -115,22 +123,30 @@ export default {
     this.loadArticles()
   },
   methods: {
-    loadArticles() {
+    loadArticles(page = 1) {
       this.$http({
         method: 'GET',
         url: '/articles',
-        // 自定义请求头
-        headers: {
-          // 注意： Bearer 和 token 之间要有空格
-          // Authorization: `Bearer ${userInfo.token}`
+        params: {
+          // 请求数据的页码，不传默认为1
+          page,
+          // 请求数据的每页大小，不传默认为10
+          per_page: 10
         }
       }).then(data => {
         // console.log(data)
+        // 列表数据
         this.articles = data.results
+        // 总记录数
+        this.totalCount = data.total_count
       })
     },
     onSubmit() {
       console.log('submit了')
+    },
+    handleCurrentPage(page) {
+      // 当页码改变的时候，请求页码对应的数据
+      this.loadArticles(page)
     }
   }
 }
