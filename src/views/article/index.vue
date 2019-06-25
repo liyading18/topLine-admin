@@ -49,13 +49,13 @@
       <!-- 表格不需要我们手动遍历 -->
       <!-- 只需要把数据给el-table的data属性就可以了 -->
       <!-- 然后配置el-table-column需要展示的数据字段即可 -->
-      <el-table class="list-table" :data="articles" style="width: 100%">
+      <el-table v-loading="articleLoading" class="list-table" :data="articles" style="width: 100%">
         <!-- 表格列默认只能输出文本，如果需要自定义里面的内容，则需要自定义 -->
         <el-table-column prop="cover.images[0]" label="封面" width="60">
           <!-- slot-scope是插槽作用域，scope是自己起的名字，scope中有个成员叫row
           scope.row就是当前的遍历项-->
           <template slot-scope="scope">
-            <img :src="scope.row.cover.images[0]" alt>
+            <img width="40" :src="scope.row.cover.images[0]" alt="">
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" width="180"></el-table-column>
@@ -72,6 +72,7 @@
         layout="prev, pager, next"
         :total="totalCount"
         @current-change="handleCurrentPage"
+        :disabled= "articleLoading"
       ></el-pagination>
       <!-- 数据分页 -->
     </el-card>
@@ -99,6 +100,7 @@ export default {
         value1: ''
       },
       totalCount: 0,
+      articleLoading: false,
       tableData: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -124,6 +126,7 @@ export default {
   },
   methods: {
     loadArticles(page = 1) {
+      this.articleLoading = true
       this.$http({
         method: 'GET',
         url: '/articles',
@@ -139,6 +142,7 @@ export default {
         this.articles = data.results
         // 总记录数
         this.totalCount = data.total_count
+        this.articleLoading = false
       })
     },
     onSubmit() {
