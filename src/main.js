@@ -15,10 +15,28 @@ import 'nprogress/nprogress.css'
 
 // 从这里引入axios，以设置全局axios
 import axios from 'axios'
+// 引入处理大数字的包
+import JSONbig from 'json-bigint'
+
 // 配置axios的基本路由
 // 也就是说配置了这个东西，你就不用每次都输入长长的http://xxx
 // 路径中的/，多退少补
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+
+// 使用JSONbig处理返回数据中超出Javascript安全整数范围的数字
+// JSONbig自己会分析数据中的那个数字超出范围
+// 由于后端的数据id超出了JavaScript的安全范围，会导致整数无法精确表示
+// 记住有这种方案即可
+axios.defaults.transformResponse = [function(data) {
+  // data 是未经处理的后端响应数据：JSON 格式字符串
+  try {
+    // data数据可能不是标准的JSON格式字符串，否则会导致JSONbig.parse(data)转换失败
+    return JSONbig.parse(data)
+  } catch (err) {
+    // 无法转换的数据直接鸳鸯返回
+    return data
+  }
+}]
 // axios请求拦截器
 // 所有使用axios发起的请求都要经过这里
 // config是本次请求相关的配置

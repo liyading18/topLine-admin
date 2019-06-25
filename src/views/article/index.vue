@@ -61,6 +61,12 @@
         <el-table-column prop="title" label="标题" width="180"></el-table-column>
         <el-table-column prop="pubdate" label="发布日期" width="180"></el-table-column>
         <el-table-column prop="status" label="状态"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="success">修改</el-button>
+            <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- table表格 -->
 
@@ -101,23 +107,7 @@ export default {
       },
       totalCount: 0,
       articleLoading: false,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      page: 1
     }
   },
 
@@ -149,8 +139,19 @@ export default {
       console.log('submit了')
     },
     handleCurrentPage(page) {
+      // 当页码发生改变的时候，请求页码对应的页码
+      this.page = page
       // 当页码改变的时候，请求页码对应的数据
       this.loadArticles(page)
+    },
+    handleDelete(article) {
+      this.$http({
+        method: 'DELETE',
+        url: `articles/${article.id}`
+      }).then(data => {
+        // console.log(data)
+        this.loadArticles(this.page)
+      })
     }
   }
 }
