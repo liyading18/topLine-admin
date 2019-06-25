@@ -19,6 +19,27 @@ import axios from 'axios'
 // 也就是说配置了这个东西，你就不用每次都输入长长的http://xxx
 // 路径中的/，多退少补
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+// axios请求拦截器
+// 所有使用axios发起的请求都要经过这里
+// return config 即使允许通过的方式
+// config是本次请求相关的配置
+axios.interceptors.request.use(config => {
+  const userInfo = JSON.parse(window.localStorage.getItem('user_info'))
+  // console.log('有请求经过了')
+  // console.log(config)
+  config.headers.Authorization = `Bearer ${userInfo.token}`
+  return config
+}, function(error) {
+  return Promise.reject(error)
+})
+
+// axios响应拦截器
+axios.interceptors.response.use(response => {
+  return response
+}, error => {
+  return Promise.reject(error)
+})
+
 // 把设置好的axios加入Vue的原型中
 // 为了防止与Vue.prototype中的成员相冲突，所以以$开头命名
 Vue.prototype.$http = axios
