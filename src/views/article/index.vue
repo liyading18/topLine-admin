@@ -45,10 +45,22 @@
         <span>共找到15条符合条件的内容</span>
       </div>
       <!-- table表格 -->
-      <el-table class="list-table" :data="tableData" style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
+      <!-- data用来指点表格的数据 -->
+      <!-- 表格不需要我们手动遍历 -->
+      <!-- 只需要把数据给el-table的data属性就可以了 -->
+      <!-- 然后配置el-table-column需要展示的数据字段即可 -->
+      <el-table class="list-table" :data="articles" style="width: 100%">
+        <!-- 表格列默认只能输出文本，如果需要自定义里面的内容，则需要自定义 -->
+        <el-table-column prop="cover.images[0]" label="封面" width="60">
+          <!-- slot-scope是插槽作用域，scope是自己起的名字，scope中有个成员叫row
+          scope.row就是当前的遍历项 -->
+          <template slot-scope="scope">
+            <img :src="scope.row.cover.images[0]" alt="">
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="标题" width="180"></el-table-column>
+        <el-table-column prop="pubdate" label="发布日期" width="180"></el-table-column>
+        <el-table-column prop="status" label="状态"></el-table-column>
       </el-table>
       <!-- table表格 -->
 
@@ -66,6 +78,8 @@ export default {
   name: 'ArticleList',
   data() {
     return {
+      // 列表数据
+      articles: [],
       form: {
         name: '',
         region: '',
@@ -98,19 +112,23 @@ export default {
   },
 
   created() {
-    this.$http({
-      method: 'GET',
-      url: '/articles',
-      // 自定义请求头
-      headers: {
-        // 注意： Bearer 和 token 之间要有空格
-        // Authorization: `Bearer ${userInfo.token}`
-      }
-    }).then(data => {
-      console.log(data)
-    })
+    this.loadArticles()
   },
   methods: {
+    loadArticles() {
+      this.$http({
+        method: 'GET',
+        url: '/articles',
+        // 自定义请求头
+        headers: {
+          // 注意： Bearer 和 token 之间要有空格
+          // Authorization: `Bearer ${userInfo.token}`
+        }
+      }).then(data => {
+        // console.log(data)
+        this.articles = data.results
+      })
+    },
     onSubmit() {
       console.log('submit了')
     }
