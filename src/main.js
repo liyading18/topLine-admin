@@ -35,8 +35,13 @@ axios.interceptors.request.use(config => {
 
 // axios响应拦截器
 axios.interceptors.response.use(response => {
-  return response
+  // >=200 <=400会进入这里
+  // console.log('response=>', response)
+  // 自己定义响应的数据格式
+  return response.data.data
 }, error => {
+  // >=400会进入这里
+  // console.log('response error=>', response)
   return Promise.reject(error)
 })
 

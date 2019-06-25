@@ -112,11 +112,12 @@ export default {
         method: 'POST',
         url: '/authorizations',
         data: this.form
-      }).then(res => {
+      }).then(data => {
         // 大于等于200小于400的状态码都会进入这里
         // console.log(res.data)
         // 登陆成功，将用户信息存储到本地存储
-        window.localStorage.setItem('user_info', JSON.stringify(res.data.data))
+        // window.localStorage.setItem('user_info', JSON.stringify(res.data.data))
+        window.localStorage.setItem('user_info', JSON.stringify(data))
         // Element提供的message消息提示组件
         this.$message({
           message: '恭喜你，登陆成功！',
@@ -176,9 +177,9 @@ export default {
       this.$http({
         method: 'GET',
         url: `/captchas/${this.form.mobile}`
-      }).then(res => {
+      }).then(data => {
         // console.log(res.data)
-        const data = res.data.data
+        // const data = res.data.data
         window.initGeetest({
           // 以下配置参数来自服务端 SDK
           gt: data.gt,
@@ -215,8 +216,8 @@ export default {
                 validate,
                 seccode
               }
-            }).then(res => {
-              console.log(res.data)
+            }).then(data => {
+              // console.log(data)
               // 发送短信之后，开始倒计时
               this.codeCountDown()
             })
