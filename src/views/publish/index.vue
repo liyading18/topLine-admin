@@ -3,11 +3,12 @@
     <div slot="header" class="header">
       <span>发布文章</span>
       <div>
-        <el-button type="success" plain>发布</el-button>
-        <el-button type="primary" plain>存入草稿</el-button>
+        <el-button type="success" plain @click="handlePublish(false)">发布</el-button>
+        <el-button type="primary" @click="handlePublish(true)" plain>存入草稿</el-button>
       </div>
     </div>
     <el-form>
+      <!-- 文章标题不能少于5个字符 -->
       <el-form-item label="标题">
         <el-input type="text" v-model="articleForm.title"></el-input>
       </el-form-item>
@@ -44,6 +45,28 @@ export default {
         // 频道
         channel_id: 3
       }
+    }
+  },
+  methods: {
+    handlePublish(draft = false) {
+      this.$http({
+        method: 'POST',
+        url: '/articles',
+        // post请求发送添加的数据放在data中
+        data: this.articleForm,
+        // 草稿状态参数
+        params: {
+          draft
+        }
+      }).then(data => {
+        this.$message({
+          type: 'success',
+          message: '发布成功'
+        })
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('发送失败')
+      })
     }
   }
 }
