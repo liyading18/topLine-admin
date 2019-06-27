@@ -31,9 +31,16 @@ const router = new Router({
           path: '',
           component: () => import('@/views/home')
         },
+        // 发布文章
         {
           name: 'publish',
           path: '/publish',
+          component: () => import('@/views/publish')
+        },
+        // 编辑文章
+        {
+          name: 'publish-edit',
+          path: '/publish/:id',
           component: () => import('@/views/publish')
         },
         {

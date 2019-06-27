@@ -7,7 +7,7 @@
         <el-button type="primary" @click="handlePublish(true)" plain>存入草稿</el-button>
       </div>
     </div>
-    <el-form>
+    <el-form v-loading="$route.name==='publish-edit' && editLoading">
       <!-- 文章标题不能少于5个字符 -->
       <el-form-item>
         <el-input type="text" v-model="articleForm.title" placeholder="标题"></el-input>
@@ -66,7 +66,9 @@ export default {
         channel_id: ''
       },
       // 富文本编辑器相关参数选项
-      editorOption: {}
+      editorOption: {},
+      // 文章加载状态
+      editLoading: false
     }
   },
   // 计算属性
@@ -75,10 +77,35 @@ export default {
       return this.$refs.myQuillEditor.quill
     }
   },
+  created() {
+    // console.log(this.$route)
+    // 自己犯错,这里是$$route,而不是$router
+    // 如果是编辑文章,首先加载文章内容
+    if (this.$route.name === 'publish-edit') {
+      this.loadArticle()
+    }
+  },
   mounted() {
     console.log('this is current quill instance object', this.editor)
   },
   methods: {
+    loadArticle() {
+      // 加载文章详情时候,编辑状态
+      this.editLoading = true
+      this.$http({
+        method: 'GET',
+        url: `/articles/${this.$route.params.id}`
+      }).then(data => {
+        // console.log(data)
+        // 将获取的内容直接赋值给文章对象
+        this.articleForm = data
+        // 加载成功,显示表单,状态改变
+        this.editLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('加载文章详情失败')
+      })
+    },
     handlePublish(draft = false) {
       this.$http({
         method: 'POST',
