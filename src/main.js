@@ -21,6 +21,7 @@ import JSONbig from 'json-bigint'
 // 配置axios的基本路由
 // 也就是说配置了这个东西，你就不用每次都输入长长的http://xxx
 // 路径中的/，多退少补
+// axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0/'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 
 // 使用JSONbig处理返回数据中超出Javascript安全整数范围的数字
@@ -33,7 +34,7 @@ axios.defaults.transformResponse = [function(data) {
     // data数据可能不是标准的JSON格式字符串，否则会导致JSONbig.parse(data)转换失败
     return JSONbig.parse(data)
   } catch (err) {
-    // 无法转换的数据直接鸳鸯返回
+    // 无法转换的数据直接原样返回
     return data
   }
 }]
@@ -60,7 +61,12 @@ axios.interceptors.response.use(response => {
   // >=200 <=400会进入这里
   // console.log('response=>', response)
   // 自己定义响应的数据格式
-  return response.data.data
+  // 如果返回的数据格式是对象并且它有个成员叫data
+  if (typeof response.data === 'object' && response.data.data) {
+    return response.data.data
+  } else {
+    return response.data
+  }
 }, error => {
   // >=400会进入这里
   // 查看错误对象  dir只能单个使用，不能在一行

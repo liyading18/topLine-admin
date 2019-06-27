@@ -31,8 +31,7 @@ export default {
   },
   methods: {
     LogOut() {
-      // window.localStorage.removeItem('this.userInfo')
-      window.localStorage.clear()
+      window.localStorage.removeItem('user_info')
     }
   }
 }
