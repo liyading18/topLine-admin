@@ -200,7 +200,7 @@ export default {
         }
       }).then(data => {
         // 查看数据
-        console.log(data)
+        // console.log(data)
         // 列表数据
         this.articles = data.results
         // 总记录数
