@@ -20,10 +20,14 @@
         </el-form-item>
         <el-form-item label="频道列表">
           <!-- 这里接口列表要求传channel_id -->
-          <el-select v-model="filterParams.channel_id" placeholder="请选择">
+          <!-- <el-select v-model="filterParams.channel_id" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
             <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          </el-select> -->
+          <!-- 应用列表组件 -->
+          <article-channel
+            v-model="filterParams.channel_id"
+          ></article-channel>
         </el-form-item>
         <el-form-item label="活动时间">
           <el-date-picker
@@ -106,9 +110,14 @@
 </template>
 
 <script>
+// 引入频道组件
+import ArticleChannel from '@/components/article-channel'
 // const userInfo = JSON.parse(window.localStorage.getItem('user_info'))
 export default {
   name: 'ArticleList',
+  components: {
+    ArticleChannel
+  },
   data() {
     return {
       // 列表数据
@@ -151,7 +160,7 @@ export default {
         }
       ],
       // 频道列表
-      channels: [],
+      // channels: [],
       // 文章查询条件参数，为了方便把参数写在这里
       filterParams: {
         // 文章状态
@@ -173,7 +182,7 @@ export default {
     // 加载文章列表
     this.loadArticles()
     // 初始化的时候加载频道列表
-    this.loadChannels()
+    // this.loadChannels()
   },
   methods: {
     loadArticles(page = 1) {
@@ -208,17 +217,17 @@ export default {
         this.articleLoading = false
       })
     },
-    loadChannels() {
-      this.$http({
-        method: 'GET',
-        url: '/channels'
-        // 不需要传参数，默认值带参数
-      }).then(data => {
-        // console.log(data)
-        // 将channels列表赋值给自定义的channels
-        this.channels = data.channels
-      })
-    },
+    // loadChannels() {
+    //   this.$http({
+    //     method: 'GET',
+    //     url: '/channels'
+    //     // 不需要传参数，默认值带参数
+    //   }).then(data => {
+    //     // console.log(data)
+    //     // 将channels列表赋值给自定义的channels
+    //     this.channels = data.channels
+    //   })
+    // },
     onSubmit() {
       // console.log('submit了')
       // 让分页组件的页码回到第一页

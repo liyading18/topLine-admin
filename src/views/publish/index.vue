@@ -17,17 +17,31 @@
       </el-form-item>
       <el-form-item label="封面"></el-form-item>
       <el-form-item label="频道">
-        <el-select v-model="articleForm.channel_id">
-          <el-option label="请选择" value="ios"></el-option>
-        </el-select>
+        <!-- 给频道组件一个出口 -->
+        <!-- 利用组件通信 -->
+        <!-- 父传值: Props Down
+        子传父: Events Up -->
+        <!-- <article-channel
+          :value="articleForm.channel_id"
+          @input="articleForm.channel_id=$event"
+        ></article-channel> -->
+        <article-channel
+          v-model="articleForm.channel_id"
+        ></article-channel>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
+// 引入频道组件
+import ArticleChannel from '@/components/article-channel'
 export default {
   name: 'AppPublish',
+  // 配置频道组件选项
+  components: {
+    ArticleChannel
+  },
   data() {
     return {
       articleForm: {
@@ -42,8 +56,8 @@ export default {
           // 图片链接
           images: []
         },
-        // 频道
-        channel_id: 3
+        // 频道,自己设置它默认是空字符串
+        channel_id: ''
       }
     }
   },
