@@ -3,7 +3,7 @@
     <div slot="header" class="header">
       <span>发布文章</span>
       <div>
-        <el-button type="success" plain @click="handlePublish(false)">发布</el-button>
+        <el-button type="success" plain @click="handlePublish(false)">{{ isEdit ? '更新' : '发布' }}</el-button>
         <el-button type="primary" @click="handlePublish(true)" plain>存入草稿</el-button>
       </div>
     </div>
@@ -75,15 +75,19 @@ export default {
   computed: {
     editor() {
       return this.$refs.myQuillEditor.quill
+    },
+    isEdit() {
+      return this.$route.name === 'publish-edit'
     }
   },
   created() {
     // console.log(this.$route)
-    // 自己犯错,这里是$$route,而不是$router
+    // 自己犯错,这里是$route,而不是$router
     // 如果是编辑文章,首先加载文章内容
-    if (this.$route.name === 'publish-edit') {
-      this.loadArticle()
-    }
+    // if (this.$route.name === 'publish-edit') {
+    //   this.loadArticle()
+    // }
+    this.isEdit && this.loadArticle()
   },
   mounted() {
     console.log('this is current quill instance object', this.editor)
