@@ -3,8 +3,18 @@
     <div slot="header" class="header">
       <span>发布文章</span>
       <div>
-        <el-button type="success" plain @click="handlePublish(false)">{{ isEdit ? '更新' : '发布' }}</el-button>
-        <el-button type="primary" @click="handlePublish(true)" plain>存入草稿</el-button>
+        <el-button
+          type="success"
+          plain
+          @click="handlePublish(false)"
+          :loading="publishLoading"
+        >{{ isEdit ? '更新' : '发布' }}</el-button>
+        <el-button
+          type="primary"
+          @click="handlePublish(true)"
+          plain
+          :loading="publishLoading"
+        >存入草稿</el-button>
       </div>
     </div>
     <el-form v-loading="$route.name==='publish-edit' && editLoading">
@@ -41,6 +51,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 // 引入富文本编辑器
 import { quillEditor } from 'vue-quill-editor'
+// import { Promise } from 'q'
 export default {
   name: 'AppPublish',
   // 配置频道组件选项
@@ -68,7 +79,9 @@ export default {
       // 富文本编辑器相关参数选项
       editorOption: {},
       // 文章加载状态
-      editLoading: false
+      editLoading: false,
+      // 按钮状态
+      publishLoading: false
     }
   },
   // 计算属性
@@ -78,6 +91,10 @@ export default {
     },
     isEdit() {
       return this.$route.name === 'publish-edit'
+    },
+    // 计算属性表示文章Id
+    articleId() {
+      return this.$route.params.id
     }
   },
   created() {
@@ -98,7 +115,7 @@ export default {
       this.editLoading = true
       this.$http({
         method: 'GET',
-        url: `/articles/${this.$route.params.id}`
+        url: `/articles/${this.articleId}`
       }).then(data => {
         // console.log(data)
         // 将获取的内容直接赋值给文章对象
@@ -111,7 +128,27 @@ export default {
       })
     },
     handlePublish(draft = false) {
-      this.$http({
+      // 禁用按钮的点击状态
+      this.publishLoading = true
+      // 判断是编辑操作还是添加操作
+      if (this.isEdit) {
+        // 执行编辑操作
+        // Promise 语法
+        this.submitEdit(draft).then(() => {
+          this.publishLoading = false
+        })
+      } else {
+        // Promise 语法
+        // 执行添加操作
+        this.submitAdd(draft).then(() => {
+          this.publishLoading = false
+        })
+      }
+    },
+    // 封装添加操作,自动为它传一个draft是否为草稿状态
+    submitAdd(draft) {
+      // axios返回promise
+      return this.$http({
         method: 'POST',
         url: '/articles',
         // post请求发送添加的数据放在data中
@@ -128,6 +165,35 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.error('发送失败')
+      })
+    },
+    // 封装编辑操作,自动为他传一个draft是否为草稿状态
+    submitEdit(draft) {
+      // axios返回Promise
+      return this.$http({
+        method: 'PUT',
+        url: `articles/${this.articleId}`,
+        data: {
+          title: this.articleForm.title,
+          content: this.articleForm.content,
+          cover: this.articleForm.cover,
+          channel_id: this.articleForm.channel_id
+        },
+        // 查询字符串参数
+        params: {
+          draft
+        }
+      }).then(data => {
+        this.$message({
+          type: 'success',
+          message: '更新成功'
+        })
+        this.$router.push({
+          name: 'article-list'
+        })
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('更新失败')
       })
     }
   }
