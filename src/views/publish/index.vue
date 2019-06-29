@@ -81,16 +81,38 @@ export default {
       fromDirty: false
     }
   },
+  // watch: {
+  //   articleForm: {
+  //     handler() {
+  //       console.log('123')
+  //       this.fromDirty = true
+  //     },
+  //     // 对象数组类型需要配置深度监视，如果是普通数据不需要
+  //     deep: true
+  //     // 如果希望初始的时候就调用一次，则可以配置值为true
+  //     // immediate: true
+  //   }
+  // },
   watch: {
-    articleForm: {
-      handler() {
-        console.log('123')
-        this.fromDirty = true
-      },
-      // 对象数组类型需要配置深度监视，如果是普通数据不需要
-      deep: true
-      // 如果希望初始的时候就调用一次，则可以配置值为true
-      // immediate: true
+    $route(to, from) {
+      // 如果你是从更新页面来
+      if (from.name === 'publish-edit') {
+        this.articleForm = {
+          // 标题
+          title: '',
+          // 内容
+          content: '',
+          // 封面
+          cover: {
+            // 封面类型
+            type: 0,
+            // 图片链接
+            images: []
+          },
+          // 频道,自己设置它默认是空字符串
+          channel_id: ''
+        }
+      }
     }
   },
   // 计算属性
@@ -114,6 +136,11 @@ export default {
     //   this.loadArticle()
     // }
     this.isEdit && this.loadArticle()
+    // 如果是发布界面，则直接开启监视
+    if (this.$route.name === 'publish') {
+      // 开启监视
+      this.watchForm()
+    }
   },
   mounted() {
     console.log('this is current quill instance object', this.editor)
@@ -131,6 +158,10 @@ export default {
         this.articleForm = data
         // 加载成功,显示表单,状态改变
         this.editLoading = false
+        // 如果你需要在数据驱动改变影响视图个性之后做一些DOM操作，可以把代码写在this.$nextTick()
+        this.$nextTick(() => {
+          this.watchForm()
+        })
       }).catch(err => {
         console.log(err)
         this.$message.error('加载文章详情失败')
@@ -203,6 +234,18 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.error('更新失败')
+      })
+    },
+    // 监视方法  vue
+    watchForm() {
+      const unwatch = this.$watch('articleForm', function() {
+        console.log('watchForm')
+        this.fromDirty = true
+        // 之后取消观察
+        unwatch()
+      },
+      {
+        deep: true
       })
     }
   },
