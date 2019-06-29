@@ -5,8 +5,8 @@
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
           <!-- <img src="http://toutiao.meiduo.site/Fkj6tQi3xJwVXi1u2swCElotfdCi" width="30"> -->
-          <img :src="userInfo.photo" alt>
-          {{ userInfo.name }}
+          <img :src="$store.state.user.photo" alt>
+          {{ $store.state.user.name }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -23,11 +23,11 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      userInfo: {}
+      // userInfo: {}
     }
   },
   created() {
-    this.userInfo = JSON.parse(window.localStorage.getItem('user_info'))
+    // this.userInfo = JSON.parse(window.localStorage.getItem('user_info'))
   },
   methods: {
     LogOut() {

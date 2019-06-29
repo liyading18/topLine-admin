@@ -17,6 +17,8 @@ import 'nprogress/nprogress.css'
 import axios from 'axios'
 // 引入处理大数字的包
 import JSONbig from 'json-bigint'
+// 引入vuex
+import store from './store'
 
 // 配置axios的基本路由
 // 也就是说配置了这个东西，你就不用每次都输入长长的http://xxx
@@ -93,6 +95,7 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app')
