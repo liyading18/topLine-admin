@@ -9,12 +9,7 @@
           @click="handlePublish(false)"
           :loading="publishLoading"
         >{{ isEdit ? '更新' : '发布' }}</el-button>
-        <el-button
-          type="primary"
-          @click="handlePublish(true)"
-          plain
-          :loading="publishLoading"
-        >存入草稿</el-button>
+        <el-button type="primary" @click="handlePublish(true)" plain :loading="publishLoading">存入草稿</el-button>
       </div>
     </div>
     <el-form v-loading="$route.name==='publish-edit' && editLoading">
@@ -81,7 +76,21 @@ export default {
       // 文章加载状态
       editLoading: false,
       // 按钮状态
-      publishLoading: false
+      publishLoading: false,
+      // 表单是否被编辑过的状态
+      fromDirty: false
+    }
+  },
+  watch: {
+    articleForm: {
+      handler() {
+        console.log('123')
+        this.fromDirty = true
+      },
+      // 对象数组类型需要配置深度监视，如果是普通数据不需要
+      deep: true
+      // 如果希望初始的时候就调用一次，则可以配置值为true
+      // immediate: true
     }
   },
   // 计算属性
@@ -195,6 +204,26 @@ export default {
         console.log(err)
         this.$message.error('更新失败')
       })
+    }
+  },
+  // 当要从当前导航到另一个路由的时候被触发
+  // 我们可以控制如有离开的行为
+  // 例如当前页面如果有未保存的数据，提示用户
+  // to要去哪里
+  // from来自哪里
+  // next就是允许通过的方法
+  beforeRouteLeave(to, from, next) {
+    // 如果表单没有被用户动过，则让导航直接通过
+    if (!this.fromDirty) {
+      return next()
+    }
+    const answer = window.confirm('当前有未保存的数据，确定要离开吗？')
+    if (answer) {
+      // 正常往后进行导航
+      next()
+    } else {
+      // 取消导航
+      next(false)
     }
   }
 }
