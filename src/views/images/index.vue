@@ -31,7 +31,14 @@
               class="button"
               @click="handleCollect(item)"
             ></el-button>
-            <el-button type="primary" icon="el-icon-delete-solid" circle plain class="button"></el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-delete-solid"
+              circle
+              plain
+              class="button"
+              @click="handleDelete(item)"
+            ></el-button>
           </div>
         </el-card>
       </el-col>
@@ -83,6 +90,23 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.console.error(`${collect ? '' : '取消'}收藏失败`)
+      })
+    },
+    // 删除图片
+    handleDelete(item) {
+      this.$http({
+        method: 'DELETE',
+        url: `user/images/${item.id}`
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        // 删除之后，刷新数据列表
+        this.loadImages()
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('删除失败')
       })
     },
     handleUplaodSuccess() {
