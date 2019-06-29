@@ -29,6 +29,7 @@
               circle
               plain
               class="button"
+              @click="handleCollect(item)"
             ></el-button>
             <el-button type="primary" icon="el-icon-delete-solid" circle plain class="button"></el-button>
           </div>
@@ -61,6 +62,27 @@ export default {
         }
       }).then(data => {
         this.images = data.results
+      })
+    },
+    // 收藏取消状态
+    handleCollect(item) {
+      const collect = !item.is_collected
+      this.$http({
+        method: 'PUT',
+        url: `user/images/${item.id}`,
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(data => {
+        //   收藏成功的状态
+        item.is_collected = collect
+        this.$message({
+          type: 'success',
+          message: `${collect ? '' : '取消'}收藏成功`
+        })
+      }).catch(err => {
+        console.log(err)
+        this.$message.console.error(`${collect ? '' : '取消'}收藏失败`)
       })
     },
     handleUplaodSuccess() {
