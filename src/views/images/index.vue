@@ -5,8 +5,14 @@
     </div>
     <div class="action">
       <el-radio-group v-model="active">
-        <el-radio-button label="全部"></el-radio-button>
-        <el-radio-button label="收藏"></el-radio-button>
+        <el-radio-button
+          label="全部"
+          @click.native="loadImages(false)"
+        ></el-radio-button>
+        <el-radio-button
+          label="收藏"
+          @click.native="loadImages(true)"
+        ></el-radio-button>
       </el-radio-group>
       <el-upload
         action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
