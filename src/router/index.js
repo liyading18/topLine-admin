@@ -60,6 +60,12 @@ const router = new Router({
           name: 'account-setting',
           path: '/account',
           component: () => import('@/views/account')
+        },
+        // 素材管理
+        {
+          name: 'image',
+          path: '/image',
+          component: () => import('@/views/images')
         }
       ]
     }
