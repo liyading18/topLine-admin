@@ -28,6 +28,15 @@
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
+        <!-- 根据不同的type遍历显示上传图片组件 -->
+        <template v-if="articleForm.cover.type > 0 ">
+          <el-row>
+            <el-col :span="6" v-for="n in articleForm.cover.type" :key="n">
+              <!-- 图片组件出口 -->
+              <UploadImage></UploadImage>
+            </el-col>
+          </el-row>
+        </template>
       </el-form-item>
       <el-form-item label="频道">
         <!-- 给频道组件一个出口 -->
@@ -53,13 +62,15 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 // 引入富文本编辑器
 import { quillEditor } from 'vue-quill-editor'
-// import { Promise } from 'q'
+// 引入封面图片组件
+import UploadImage from './components/upload-image'
 export default {
   name: 'AppPublish',
   // 配置频道组件选项
   components: {
     ArticleChannel,
-    quillEditor
+    quillEditor,
+    UploadImage
   },
   data() {
     return {
@@ -71,7 +82,7 @@ export default {
         // 封面
         cover: {
           // 封面类型
-          type: 0,
+          type: 1,
           // 图片链接
           images: []
         },
