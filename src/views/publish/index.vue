@@ -33,7 +33,9 @@
           <el-row>
             <el-col :span="6" v-for="n in articleForm.cover.type" :key="n">
               <!-- 图片组件出口 -->
-              <UploadImage></UploadImage>
+              <!-- 父组件的v-model相当于那两个东西 -->
+              <!-- 这里的n不是索引 -->
+              <UploadImage v-model="articleForm.cover.images[n-1]"></UploadImage>
             </el-col>
           </el-row>
         </template>
@@ -83,7 +85,7 @@ export default {
         cover: {
           // 封面类型
           type: 1,
-          // 图片链接
+          // 图片链接,真正存储图片的数组
           images: []
         },
         // 频道,自己设置它默认是空字符串
