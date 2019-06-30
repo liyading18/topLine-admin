@@ -66,6 +66,12 @@ const router = new Router({
           name: 'image',
           path: '/image',
           component: () => import('@/views/images')
+        },
+        // 粉丝数据
+        {
+          name: 'fans-overflow',
+          path: '/fans/overflow',
+          component: () => import('@/views/fans')
         }
       ]
     }

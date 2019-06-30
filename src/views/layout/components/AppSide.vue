@@ -50,7 +50,7 @@
         <i class="el-icon-star-on"></i>
         <span>粉丝管理</span>
       </template>
-      <el-menu-item index="3-2">
+      <el-menu-item index="/fans/overflow">
         <i class="el-icon-s-help"></i>
         <span slot="title">图文数据</span>
       </el-menu-item>
