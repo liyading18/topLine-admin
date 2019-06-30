@@ -21,7 +21,14 @@
         <!-- git中的富文本编辑器 -->
         <quill-editor v-model="articleForm.content" ref="myQuillEditor" :options="editorOption"></quill-editor>
       </el-form-item>
-      <el-form-item label="封面"></el-form-item>
+      <el-form-item label="封面">
+        <el-radio-group v-model="articleForm.cover.type">
+          <el-radio :label="1">单图</el-radio>
+          <el-radio :label="3">三图</el-radio>
+          <el-radio :label="0">无图</el-radio>
+          <el-radio :label="-1">自动</el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="频道">
         <!-- 给频道组件一个出口 -->
         <!-- 利用组件通信 -->
@@ -152,20 +159,22 @@ export default {
       this.$http({
         method: 'GET',
         url: `/articles/${this.articleId}`
-      }).then(data => {
-        // console.log(data)
-        // 将获取的内容直接赋值给文章对象
-        this.articleForm = data
-        // 加载成功,显示表单,状态改变
-        this.editLoading = false
-        // 如果你需要在数据驱动改变影响视图个性之后做一些DOM操作，可以把代码写在this.$nextTick()
-        this.$nextTick(() => {
-          this.watchForm()
-        })
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('加载文章详情失败')
       })
+        .then(data => {
+          // console.log(data)
+          // 将获取的内容直接赋值给文章对象
+          this.articleForm = data
+          // 加载成功,显示表单,状态改变
+          this.editLoading = false
+          // 如果你需要在数据驱动改变影响视图个性之后做一些DOM操作，可以把代码写在this.$nextTick()
+          this.$nextTick(() => {
+            this.watchForm()
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('加载文章详情失败')
+        })
     },
     handlePublish(draft = false) {
       // 禁用按钮的点击状态
@@ -197,15 +206,17 @@ export default {
         params: {
           draft
         }
-      }).then(data => {
-        this.$message({
-          type: 'success',
-          message: '发布成功'
-        })
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('发送失败')
       })
+        .then(data => {
+          this.$message({
+            type: 'success',
+            message: '发布成功'
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('发送失败')
+        })
     },
     // 封装编辑操作,自动为他传一个draft是否为草稿状态
     submitEdit(draft) {
@@ -223,30 +234,35 @@ export default {
         params: {
           draft
         }
-      }).then(data => {
-        this.$message({
-          type: 'success',
-          message: '更新成功'
-        })
-        this.$router.push({
-          name: 'article-list'
-        })
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('更新失败')
       })
+        .then(data => {
+          this.$message({
+            type: 'success',
+            message: '更新成功'
+          })
+          this.$router.push({
+            name: 'article-list'
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          this.$message.error('更新失败')
+        })
     },
     // 监视方法  vue
     watchForm() {
-      const unwatch = this.$watch('articleForm', function() {
-        console.log('watchForm')
-        this.fromDirty = true
-        // 之后取消观察
-        unwatch()
-      },
-      {
-        deep: true
-      })
+      const unwatch = this.$watch(
+        'articleForm',
+        function() {
+          console.log('watchForm')
+          this.fromDirty = true
+          // 之后取消观察
+          unwatch()
+        },
+        {
+          deep: true
+        }
+      )
     }
   },
   // 当要从当前导航到另一个路由的时候被触发
